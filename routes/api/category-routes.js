@@ -1,5 +1,7 @@
 const router = require('express').Router();
+const { Model } = require('sequelize');
 const { Category, Product } = require('../../models');
+const { update } = require('../../models/Product');
 
 // The `/api/categories` endpoint
   // find all categories
@@ -7,8 +9,8 @@ const { Category, Product } = require('../../models');
 router.get('/', async(req, res) => {
   try {
     const category = await Category.findAll({
-      include: [{ model: Category}, { model: Product }],
-    });
+      include: [{model: Product}],
+    })
     res.status(200).json(category);
   } catch (err) {
     res.status(500).json(err);
@@ -20,7 +22,7 @@ router.get('/', async(req, res) => {
 router.get('/:id', async(req, res) => {
   try{
     const singleCategory = await Category.findByPk(req.params.id, {
-      include: [{ model: Product}],
+      include: [{ model: Product }],
     });
 
     if(!singleCategory) {
@@ -37,7 +39,9 @@ router.get('/:id', async(req, res) => {
  // create a new category
 router.post('/', async(req, res) => {
  try {
-  const newCategory = await Category.create(req, res);
+  //console.log('HELLO', req.body);
+  const newCategory = await Category.create(req.body, res);
+  //console.log(newCategory);
   res.status(200).json(newCategory);
   } catch(err) {
     res.status(500).json(err);
