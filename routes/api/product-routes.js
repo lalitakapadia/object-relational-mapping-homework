@@ -36,14 +36,14 @@ router.get('/:id', async(req, res) => {
 });
 
 // create new product
-router.post('/', async(req, res) => {
-  try {
-    const newProduct = await Product.create(req.body, res);
-    res.status(200).json(newProduct);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.post('/', (req, res) => {
+//   try {
+//     const newProduct = await Product.create(req.body, res);
+//     res.status(200).json(newProduct);
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
   
   /* req.body should look like this...
     {
@@ -73,6 +73,7 @@ router.post('/', async(req, res) => {
       console.log(err);
       res.status(400).json(err);
     });
+  });
 
 // update product
 router.put('/:id', (req, res) => {
@@ -119,8 +120,22 @@ router.put('/:id', (req, res) => {
     });
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async(req, res) => {
   // delete one product by its `id` value
+  try {
+    const deleteProduct = await Product.destroy({
+      where: {
+        id: req.params.id
+      },
+    })
+    if (!deleteProduct) {
+      res.status(404).json({ message: 'No Product found for this id!' })
+      return;
+    }
+    res.status(200).json({ message: 'Product has been deleted' })
+  } catch (err) {
+    res.status(500).json(err)
+  }
 });
 
 module.exports = router;
