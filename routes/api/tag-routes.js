@@ -1,16 +1,16 @@
 const router = require('express').Router();
-const { Tag, Product, ProductTag } = require('../../models');
+const { Tag, Product } = require('../../models');
 
 // The `/api/tags` endpoint
-
-router.get('/', async(req, res) => {
   // find all tags
   // be sure to include its associated Product data
+router.get('/', async(req, res) => {
+  //console.log('getTags');
   try {
     const allTags = await Tag.findAll({
-      include: [{ model: Product }],
+      include: [{model: Product}]
     });
-    res.status(200).json(allTags)
+      res.status(200).json(allTags)
   } catch (err) {
     res.status(500).json(err)
   };
@@ -21,7 +21,7 @@ router.get('/:id', async(req, res) => {
   // be sure to include its associated Product data
   try {
     const singleTag = await Tag.findByPk(req.params.id, {
-      include: [{ model: Product }],
+      include: [{ model: Product }]
     })
     if (!singleTag) {
       res.status(404).json({ message: 'No Tag found for that id!' })
@@ -36,11 +36,11 @@ router.get('/:id', async(req, res) => {
 router.post('/', async(req, res) => {
   // create a new tag
   try {
-    const newTag = await Tag.create(req.body);
+    const newTag = await Tag.create(req.body, res);
     res.status(200).json(newTag)
-    console.log('New Tag Created')
+    console.log('New Tag Created');
   } catch (err) {
-    res.status(400).json(err)
+    res.status(500).json(err)
   }
 });
 
