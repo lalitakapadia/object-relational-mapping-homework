@@ -13,6 +13,7 @@ router.get('/', async(req, res) => {
   });
   res.status(200).json(product);
 } catch (err) {
+  console.log(err);
   res.status(500).json(err);
  }
 });
@@ -45,7 +46,6 @@ router.get('/:id', async(req, res) => {
     }
   */
 router.post('/', async (req, res) => {
-  console.log('hello post product');
    const product = await Product.create(req.body)
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
@@ -71,7 +71,8 @@ router.post('/', async (req, res) => {
 // update product
  // update product data
 router.put('/:id', async(req, res) => {
-   Product.update(req.body, {
+  const checkID = await Product.findByPk(req.params.id);
+   const updateProduct = await Product.update(req.body, {
     where: {
       id: req.params.id
     },
