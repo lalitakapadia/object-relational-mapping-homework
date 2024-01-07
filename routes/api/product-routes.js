@@ -106,10 +106,10 @@ router.put('/:id', async(req, res) => {
         });
       }
 
-      return res.json(product);
+      return res.json(`Product message: product has been updated successfully`);
     })
     .catch((err) => {
-      // console.log(err);
+      console.log(err);
       res.status(400).json(err);
     });
 });
